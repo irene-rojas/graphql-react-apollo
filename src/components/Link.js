@@ -31,18 +31,21 @@ class Link extends Component {
         <div className="flex items-center">
           <span className="gray">{this.props.index + 1}.</span>
           {authToken && (
-            <Mutation mutation={VOTE_MUTATION} variables={{ linkId: this.props.link.id }}
-            update={(store, { data: { vote } }) =>
-            this.props.updateStoreAfterVote(store, vote, this.props.link.id)
-            }>
+            <Mutation
+              mutation={VOTE_MUTATION}
+              variables={{ linkId: this.props.link.id }}
+              update={(store, { data: { vote } }) =>
+                this.props.updateStoreAfterVote(store, vote, this.props.link.id)
+              }
+            >
               {voteMutation => (
                 <div className="ml1 gray f11" onClick={voteMutation}>
                   ▲
-                </div>
+              </div>
             )}
           </Mutation>
           )}
-        </div>
+      </div>
         <div className="ml1">
           <div>
             {this.props.link.description} ({this.props.link.url})
