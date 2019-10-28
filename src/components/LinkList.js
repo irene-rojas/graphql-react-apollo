@@ -4,27 +4,29 @@ import gql from 'graphql-tag'
 import { Query } from 'react-apollo'
 
 export const FEED_QUERY = gql`
-{
-  feed {
-    links {
-      id
-      createdAt
-      url
-      description
-      postedBy {
+  query FeedQuery($first: Int, $skip: Int, $orderBy: LinkOrderByInput) {
+    feed(first: $first, skip: $skip, orderBy: $orderBy) {
+      links {
         id
-        name
-      }
-      votes {
-        id
-        user {
+        createdAt
+        url
+        description
+        postedBy {
           id
+          name
+        }
+        votes {
+          id
+          user {
+            id
+          }
         }
       }
+      count
     }
   }
-}
 `
+
 
 const NEW_LINKS_SUBSCRIPTION = gql`
   subscription {
