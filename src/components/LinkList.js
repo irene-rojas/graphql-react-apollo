@@ -126,7 +126,7 @@ class LinkList extends Component {
   
     render() {
       return (
-        <Query query={FEED_QUERY}>
+        <Query query={FEED_QUERY} variables={this._getQueryVariables()}>
           {({ loading, error, data, subscribeToMore }) => {
             if (loading) return <div>Fetching</div>
             if (error) return <div>Error</div>
@@ -134,18 +134,32 @@ class LinkList extends Component {
             this._subscribeToNewLinks(subscribeToMore)
             this._subscribeToNewVotes(subscribeToMore)
 
-            const linksToRender = data.feed.links
+            const linksToRender = this._getLinksToRender(data)
+            const isNewPage = this.props.location.pathname.includes('new')
+            const pageIndex = this.props.match.params.page
+              ? (this.props.match.params.page - 1) * LINKS_PER_PAGE
+              : 0
       
             return (
-              <div>
+              <Fragment>
                 {linksToRender.map((link, index) => (
                   <Link 
                     key={link.id} 
                     link={link} 
-                    index={index}
+                    index={index + pageIndex}
                     updateStoreAfterVote={this._updateCacheAfterVote} />
                 ))}
-              </div>
+                {isNewPage && (
+                  <div className="flex ml4 mv3 gray">
+                    <div className="pointer mr2" onClick={this._previousPage}>
+                      Previous
+                    </div>
+                    <div className="pointer" onClick={() => this._nextPage(data)}>
+                      Next
+                    </div>
+                  </div>
+                )}
+              </Fragment>
             )
           }}
         </Query>
